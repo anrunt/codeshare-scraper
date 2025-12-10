@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+import puppeteer from "puppeteer";
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -6,13 +6,25 @@ const puppeteer = require('puppeteer');
   // await page.goto('https://codeshare.io/GbovVA');
   await page.goto('https://codeshare.io/wdsbd04');
 
-  await page.waitForSelector('pre', { timeout: 10000 }).catch(() => {});
+  try {
+    await page.waitForSelector('pre', { timeout: 10000 })
+  } catch(err) {
+    console.error("Can't load page: ", err);
+    await browser.close();
+    process.exit(1);
+  };
 
+  // Scrolling
   await page.evaluate(()=> {
-    window.scrollTo(0, document.body.scrollHeight);
+    const scrollElement = document.querySelector('.CodeMirror-scroll');
+
+    if (scrollElement) {
+      scrollElement.scrollTop = scrollElement.scrollHeight; 
+    }
   })
 
-  await page.waitForTimeout(2000);
+  // Waiting for scroll
+  await new Promise(resolve => setTimeout(resolve, 2000));
 
   const data = await page.evaluate(() => {
     const codeLines: string[] = [];
