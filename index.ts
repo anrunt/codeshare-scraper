@@ -1,9 +1,11 @@
 import puppeteer from "puppeteer";
 
+const CODESHARE_LINK = 'https://codeshare.io/wdsbd04'; 
+
 async function runCrawler() {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto('https://codeshare.io/wdsbd04');
+    await page.goto(CODESHARE_LINK);
 
     try {
         await page.waitForSelector('.CodeMirror', { timeout: 10000 })
